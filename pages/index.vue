@@ -7,8 +7,8 @@
         <div class="flex flex-col md:flex-row items-center pt-10 px-5 md:px-0">
           <div class="w-full md:w-1/2 mb-8 md:mb-0">
             <h1 class="text-3xl md:text-4xl text-white mb-5">
-              We helps <u class="hero-underline">startup</u> to <br />
-              getting started & <u class="hero-underline">funding</u> <br />
+              We helps startup to <br />
+              getting started & funding <br />
               their truly needs
             </h1>
             <p class="text-white text-lg md:text-xl font-light mb-8">
@@ -29,7 +29,12 @@
       </div>
 
     </section>
-    <section class="container mx-auto pt-24" id="features">
+    <section class="container mx-auto pt-24 mt-5" id="features">
+      <br>
+      <br>
+      <br>
+
+
       <div class="flex justify-between items-center mb-10">
         <div class="w-auto">
           <h2 class="text-3xl text-gray-900 mb-8">
@@ -163,7 +168,7 @@
         <div class="w-auto">
           <h2 class="text-3xl text-gray-900 mb-8">
             See What Our <br />
-            Happy Clients Say
+            Clients Say
           </h2>
         </div>
       </div>
@@ -173,34 +178,16 @@
         </div>
         <div class="w-8/12 mt-16">
           <h2 class="text-3xl text-gray-900 font-light">
-            “Funding at Bucker is very easy and comfortable. <br />
-            Just need to find an idea, click and already funding.”
+            "YuraFund makes crowdfunding accessible to everyone. <br />
+            Find inspiring projects, back them instantly, and be part of innovation."
           </h2>
           <div class="testimonial-info mt-8">
-            <div class="name text-xl font-semibold">Shopie Nicole</div>
+            <div class="name text-xl font-semibold">John Doe</div>
             <div class="title text-xl font-light text-gray-400">
-              Project Manager
+              Product Owner
             </div>
           </div>
-          <div class="testimonial-icon mt-10">
-            <img
-              src="/testimonial-1-icon.png"
-              alt=""
-              class="w-20 mr-5 inline-block testimonial-user rounded-full"
-            />
-            <img
-              src="/testimonial-2-icon.png"
-              alt=""
-              class="w-20 mr-5 inline-block testimonial-user rounded-full"
-            />
-            <img
-              src="/testimonial-3-icon.png"
-              alt=""
-              class="w-20 mr-5 inline-block testimonial-user active rounded-full"
-            />
-          </div>
         </div>
-        <div class="w-2/12"></div>
       </div>
     </section>
     <div class="cta-clip -mt-20"><br></div>
@@ -230,7 +217,7 @@ export default {
   background-image: url('/auth-background.svg');
   background-position: top right;
   background-repeat: no-repeat;
-  background-color: #3b41e3;
+  background-color: #FBB117;
   transform: skewY(-6deg);
   transform-origin: top left;
 }

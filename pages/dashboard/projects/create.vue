@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="flex justify-between items-center">
-        <div class="w-3/4 mr-6">
+        <div class="w-auto mr-6">
           <h3 class="text-2xl text-gray-900 mb-4">Create New Projects</h3>
         </div>
         <div class="w-1/4 text-right">
@@ -40,7 +40,7 @@
                   <input
                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    placeholder="Contoh: Demi Gunpla Demi Istri"
+                    placeholder="Campaign Name"
                     v-model="campaign.name"
                   />
                 </div>
@@ -53,7 +53,7 @@
                   <input
                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="number"
-                    placeholder="Contoh: 200000"
+                    placeholder="0"
                     v-model.number="campaign.goal_amount"
                   />
                 </div>
@@ -66,7 +66,7 @@
                   <input
                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    placeholder="Deskripsi singkat mengenai projectmu"
+                    placeholder="Short Description of your project"
                     v-model="campaign.short_description"
                   />
                 </div>
@@ -79,7 +79,7 @@
                   <input
                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    placeholder="Contoh: Ayam, Nasi Goreng, Piring"
+                    placeholder="Backer Adventage"
                     v-model="campaign.perks"
                   />
                 </div>
@@ -92,7 +92,7 @@
                   <textarea
                     class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    placeholder="Isi deskripsi panjang untuk projectmu"
+                    placeholder="Description of your project"
                     v-model="campaign.description"
                   ></textarea>
                 </div>
@@ -142,12 +142,12 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .dashboard-header {
   background-image: url('/auth-background.svg');
   background-position: top right;
   background-repeat: no-repeat;
-  background-color: #3b41e3;
+  background-color: #FBB117;
   background-size: 250px;
   height: 100px;
 }

@@ -11,54 +11,65 @@
           <h2 class="text-4xl text-gray-900 mb-2 font-medium">Dashboard</h2>
         </div>
       </div>
-      <div class="flex justify-between items-center">
-        <div class="w-3/4 mr-6">
+      <div class="flex justify-center items-center mb-6">
+        <div class="w-3/4 text-center">
           <h3 class="text-2xl text-gray-900 mb-4">Campaign Details</h3>
         </div>
-        <div class="w-1/4 text-right">
+        <div class="w-1/4 text-center">
           <nuxt-link
             :to="{
               name: 'dashboard-projects-id-edit',
               params: { id: campaign.data.id },
             }"
-            class="bg-green-button hover:bg-green-button text-white font-bold px-4 py-1 rounded inline-flex items-center"
+            class="bg-green-button hover:bg-green-button text-white font-bold px-6 py-2 rounded inline-flex items-center justify-center"
           >
             Edit
           </nuxt-link>
         </div>
       </div>
-      <div class="block mb-2">
-        <div class="w-full lg:max-w-full lg:flex mb-4">
+      <div class="flex justify-center mb-6">
+        <div class="w-full max-w-4xl">
           <div
-            class="border border-gray-400 bg-white rounded p-8 flex flex-col justify-between leading-normal"
+            class="border border-gray-300 bg-white rounded-lg p-8 shadow-sm"
           >
-            <div>
-              <div class="text-gray-900 font-bold text-xl mb-2">
+            <div class="text-center">
+              <div class="text-gray-900 font-bold text-2xl mb-4">
                 {{ campaign.data.name }}
               </div>
-              <p class="text-gray-700 text-base">
+              <p class="text-gray-700 text-lg mb-6">
                 {{ campaign.data.short_description }}
               </p>
-              <p class="text-sm font-bold flex items-center mb-1 mt-4">
-                Description
-              </p>
-              <p class="text-gray-700 text-base">
-                {{ campaign.data.description }}
-              </p>
-              <p class="text-sm font-bold flex items-center mb-1 mt-4">
-                What Will Funders Get
-              </p>
-              <ul class="list-disc ml-5">
-                <li v-for="perk in campaign.data.perks" :key="perk">
-                  {{ perk }}
-                </li>
-              </ul>
-              <p class="text-sm font-bold flex items-center mb-1 mt-4">
-                Goal Amount
-              </p>
-              <p class="text-4xl text-gray-700 text-base">
-                {{ new Intl.NumberFormat().format(campaign.data.goal_amount) }}
-              </p>
+              
+              <div class="text-left space-y-6">
+                <div>
+                  <p class="text-sm font-bold text-gray-800 mb-2">
+                    Description
+                  </p>
+                  <p class="text-gray-700 text-base leading-relaxed">
+                    {{ campaign.data.description }}
+                  </p>
+                </div>
+                
+                <div>
+                  <p class="text-sm font-bold text-gray-800 mb-2">
+                    What Will Funders Get
+                  </p>
+                  <ul class="list-disc ml-6 space-y-1">
+                    <li v-for="perk in campaign.data.perks" :key="perk" class="text-gray-700">
+                      {{ perk }}
+                    </li>
+                  </ul>
+                </div>
+                
+                <div class="text-center">
+                  <p class="text-sm font-bold text-gray-800 mb-2">
+                    Goal Amount
+                  </p>
+                  <p class="text-4xl font-bold text-green-600">
+                    {{ new Intl.NumberFormat().format(campaign.data.goal_amount) }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -185,12 +196,12 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .dashboard-header {
   background-image: url('/auth-background.svg');
   background-position: top right;
   background-repeat: no-repeat;
-  background-color: #3b41e3;
+  background-color: #FBB117;
   background-size: 250px;
   height: 100px;
 }

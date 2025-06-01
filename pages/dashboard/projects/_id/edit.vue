@@ -142,12 +142,12 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 .dashboard-header {
   background-image: url('/auth-background.svg');
   background-position: top right;
   background-repeat: no-repeat;
-  background-color: #3b41e3;
+  background-color: #FBB117;
   background-size: 250px;
   height: 100px;
 }

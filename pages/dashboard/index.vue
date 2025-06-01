@@ -1,6 +1,6 @@
 <template>
   <div class="project-page">
-    <section class="dashboard-header pt-5">
+    <section class="dashboard-header">
       <div class="container mx-auto relative">
         <Navbar />
       </div>
@@ -94,12 +94,12 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .dashboard-header {
   background-image: url('/auth-background.svg');
   background-position: top right;
   background-repeat: no-repeat;
-  background-color: #3b41e3;
+  background-color: #FBB117;
   background-size: 250px;
   height: 100px;
 }
@@ -164,15 +164,6 @@ footer {
   text-decoration-color: #1abc9c;
 }
 
-.testimonial-user {
-  opacity: 0.4;
-  &.active {
-    opacity: 1;
-    border: 5px solid #fff;
-    box-shadow: 0 0 0 1px #3b41e3;
-  }
-}
-
 .list-check {
   li {
     background: url('/icon-checklist.svg') no-repeat left 8px;
@@ -181,7 +172,7 @@ footer {
 }
 
 .item-thumbnail:hover {
-  background-color: #ff872e;
+  background-color: #FBB117;
   border-radius: 20px;
   &:after {
     position: absolute;

@@ -55,6 +55,12 @@ export default {
   },
 
   auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/dashboard'  // Redirect setelah login berhasil
+    },
     strategies: {
       local: {
         endpoints: {
