@@ -17,12 +17,19 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.15.1",
-    "nuxt": "^2.15.7"
+    "nuxt": "^2.15.7",
+    "buffer": "^6.0.3"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^4.2.0",
     "eslint-config-prettier": "^8.3.0",
     "postcss": "^8.3.5",
     "prettier": "^2.3.2"
+  },
+  "overrides": {
+    "buffer": "^6.0.3"
+  },
+  "resolutions": {
+    "buffer": "^6.0.3"
   }
 }
