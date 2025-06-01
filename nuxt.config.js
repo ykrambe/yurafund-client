@@ -49,8 +49,8 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // baseURL: 'https://yurafund-production.up.railway.app/'
-    baseURL: 'http://localhost:8080'
+    baseURL: 'https://yurafund-production.up.railway.app/'
+    // baseURL: 'http://localhost:8080'
 
   },
 
