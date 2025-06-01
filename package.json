@@ -1,11 +1,7 @@
 {
   "name": "yurafund",
   "version": "1.0.0",
-  "private": true,
-  "engines": {
-    "node": "16.x",
-    "npm": "8.x"
-  },
+  "private": true
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
