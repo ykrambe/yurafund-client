@@ -94,9 +94,16 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   },
+  
+  // Generate configuration for static deployment
+  generate: {
+    dir: 'dist'
+  },
+  
   vue: {
-  config: {
-    devtools: true
+    config: {
+      devtools: true
+    }
   }
 }
-}
+
