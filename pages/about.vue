@@ -1,11 +1,11 @@
 <template>
   <div>
-    <h1>This is login</h1>
+    <h1>This is about</h1>
   </div>
 </template>
 
 <script setup>
-// Login page
+// About page
 </script>
 
 <style scoped>
