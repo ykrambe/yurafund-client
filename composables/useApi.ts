@@ -1,6 +1,6 @@
 export const useApi = () => {
   const config = useRuntimeConfig()
-  
+  console.log("🚀 ~ useApi ~ config:", config.public.apiBase)
   const api = $fetch.create({
     baseURL: config.public.apiBase + '/api/v1',
     headers: {

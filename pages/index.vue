@@ -118,7 +118,9 @@ const testApiConnection = async () => {
   try {
     apiStatus.value = 'connecting'
     // Test endpoint - adjust according to your backend
-    await api('/campaigns-limit')
+    const check = await api('/campaigns-limit')
+    console.log("🚀 ~ testApiConnection ~ check:", check)
+    
     apiStatus.value = 'connected'
   } catch (error) {
     console.error('API connection failed:', error)
