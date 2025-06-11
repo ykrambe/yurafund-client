@@ -50,5 +50,17 @@ export default defineNuxtConfig({
   ui: {
     global: true,
     icons: ['heroicons']
-  }
+  },
+  
+  // Fonts configuration
+  fonts: {
+    families: [
+      {
+        name: 'Poppins',
+        provider: 'google',
+        weights: [300, 400, 500, 600, 700],
+        subsets: ['latin']
+      }
+    ]
+  },
 })
