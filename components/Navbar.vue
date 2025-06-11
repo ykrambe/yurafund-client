@@ -1,6 +1,6 @@
 <template>
   <header 
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white" 
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-secondary" 
   >
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
       <!-- Logo -->
@@ -13,8 +13,7 @@
       <!-- Mobile Menu Button -->
       <button
         @click="toggleMobileMenu"
-        class="lg:hidden focus:outline-none transition-colors"
-        :class="{'text-gray-800': scrolled, 'text-white': !scrolled}"
+        class="lg:hidden focus:outline-none transition-colors text-gray-800"
       >
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -313,38 +312,3 @@ const vClickOutside = {
   }
 }
 </script>
-
-<style scoped>
-/* Add smooth transitions */
-.transition-all {
-  transition-property: all;
-}
-
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-}
-
-.transition-transform {
-  transition-property: transform;
-}
-
-.transition-opacity {
-  transition-property: opacity;
-}
-
-.ease-linear {
-  transition-timing-function: linear;
-}
-
-.ease-in {
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
-}
-
-.ease-out {
-  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
-</style>

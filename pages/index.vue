@@ -1,9 +1,8 @@
 <template>
-  <div class="bg-orange-secondary">
+  <div class="bg-white">
     <section class="landing-hero pt-5 relative">
       <div class="header__bg"></div>
       <div class="container mx-auto relative">
-        <Navbar />
         <div class="flex flex-col md:flex-row items-center pt-10 px-5 md:px-0">
           <div class="w-full md:w-1/2 mb-8 md:mb-0">
             <h1 class="text-3xl md:text-4xl text-white mb-5">
@@ -81,7 +80,7 @@
         </div>
       </div>
     </section>
-    <section class="container mx-auto pt-24" id="projects">
+    <section v-if="campaigns && campaigns.meta.status == 'success'" class="container mx-auto pt-24 bg-white" id="projects">
       <div class="flex justify-between items-center">
         <div class="w-auto">
           <h2 class="text-3xl text-gray-900 mb-8">
@@ -95,9 +94,9 @@
           >
         </div>
       </div>
-      <div class="grid grid-cols-3 gap-4 mt-3">
+      <div  class="grid grid-cols-3 gap-4 mt-3">
         <div
-          v-for="campaign in campaigns?.data"
+          v-for="campaign in campaigns.data"
           :key="campaign.id"
           class="mx-h w-full p-5 border border-gray-500 rounded-20"
         >
@@ -167,7 +166,7 @@
           </h2>
         </div>
       </div>
-      <div class="flex mb-10">
+      <div class="flex mb-10 bg-secondary">
         <div class="w-2/12 flex justify-center items-start">
           <img src="/testimonial-line.svg" alt="" />
         </div>
@@ -187,18 +186,26 @@
     </section>
     <div class="cta-clip"><br></div>
     <CallToAction />
-    <Footer />
   </div>
 </template>
 
 <script setup>
-const config = useRuntimeConfig()
-const { $fetch } = useNuxtApp()
-
-// Fetch campaigns data
-const { data: campaigns } = await useFetch('/api/v1/campaigns-limit', {
-  baseURL: config.public.apiBase
+definePageMeta({
+  layout: 'home'
 })
+
+const config = useRuntimeConfig()
+const { api } = useApi()
+
+const campaigns = ref(null)
+
+try {
+  campaigns.value = await api('/campaigns-limit')
+} catch (error) {
+  console.error('API connection failed:', error)
+}
+
+
 
 // SEO
 useHead({

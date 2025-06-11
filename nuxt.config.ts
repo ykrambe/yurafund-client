@@ -31,7 +31,8 @@ export default defineNuxtConfig({
   // Tailwind CSS configuration
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
-    configPath: 'tailwind.config'
+    config: {},
+    viewer: { endpoint: '/_tailwind', exportViewer: true }
   },
   
   // ESLint configuration

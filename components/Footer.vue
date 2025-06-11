@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-orange-progress py-20 text-black text-lg">
+  <footer class="bg-primary py-20 text-black text-lg">
     <div class="container mx-auto">
       <div class="sm:flex">
         <div class="sm:w-1/2 sm:mt-0 mt-8 h-auto">
