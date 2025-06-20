@@ -121,7 +121,7 @@
               </p>
               <div class="relative pt-4 progress-bar">
                 <div
-                  class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200 h-3 rounded-lg"
+                  class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200"
                 >
                   <div
                     :style="
@@ -166,7 +166,7 @@
           </h2>
         </div>
       </div>
-      <div class="flex mb-10 bg-secondary">
+      <div class="flex bg-secondary">
         <div class="w-2/12 flex justify-center items-start">
           <img src="/testimonial-line.svg" alt="" />
         </div>

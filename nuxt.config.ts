@@ -50,7 +50,9 @@ export default defineNuxtConfig({
   // UI configuration
   ui: {
     global: true,
-    icons: ['heroicons']
+    icons: ['heroicons'],
+    colorMode: false,
+    fonts: false
   },
   
   // Fonts configuration

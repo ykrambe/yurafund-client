@@ -66,13 +66,13 @@
         <template v-if="!authStore.isLoggedIn">
           <NuxtLink
             to="/login"
-            class="px-4 py-2 rounded-md text-base font-medium transition-colors bg-gray-800  hover:text-white hover:bg-gray-500"
+            class="px-4 py-2 rounded-md font-medium transition-colors text-white bg-gray-800  hover:bg-gray-500"
           >
             Sign In
           </NuxtLink>
           <NuxtLink
             to="/register"
-            class="px-4 py-2 rounded-md text-base font-medium transition-colors bg-gray-800  hover:text-white hover:bg-gray-500"
+            class="px-4 py-2 rounded-md text-base font-medium transition-colors text-white bg-gray-800  hover:bg-gray-500"
           >
             Sign Up
           </NuxtLink>
@@ -83,7 +83,7 @@
           <button
             @click="toggleDropdown"
             class="flex items-center space-x-2 px-4 py-2 rounded-md transition-colors"
-            :class="{'text-gray-800 hover:bg-gray-100': scrolled, 'text-white hover:bg-white hover:bg-opacity-20': !scrolled}"
+            :class="{'text-gray-800 hover:bg-gray-100': scrolled}"
           >
             <img
               v-if="authStore.user?.image_url"
@@ -91,7 +91,7 @@
               alt="User avatar"
               class="h-8 w-8 rounded-full object-cover"
             />
-            <div v-else class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center text-white font-medium">
+            <div v-else class="h-8 w-8 rounded-full bg-teal-600 flex items-center justify-center font-medium text-white">
               {{ authStore.user?.name?.charAt(0) || 'U' }}
             </div>
             <span class="font-medium">{{ authStore.user?.name || 'User' }}</span>
@@ -115,9 +115,10 @@
             leave-from-class="transform opacity-100 scale-100"
             leave-to-class="transform opacity-0 scale-95"
           >
+              <!-- v-show="showDropdown" -->
+              <!-- v-click-outside="closeDropdown" -->
             <div
               v-show="showDropdown"
-              v-click-outside="closeDropdown"
               class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
             >
               <NuxtLink to="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-teal-600">
@@ -210,7 +211,7 @@
                 </div>
               </div>
               <div class="ml-3">
-                <div class="text-base font-medium" :class="{'text-gray-800': scrolled, 'text-white': !scrolled}">
+                <div class="text-base font-medium text-gray-800">
                   {{ authStore.user?.name || 'User' }}
                 </div>
               </div>
@@ -218,24 +219,21 @@
             <div class="mt-3 space-y-1 px-2">
               <NuxtLink
                 to="/dashboard"
-                class="block px-3 py-2 rounded-md text-base font-medium"
-                :class="{'text-gray-800 hover:text-teal-600 hover:bg-gray-100': scrolled, 'text-white hover:text-white hover:bg-white hover:bg-opacity-20': !scrolled}"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100"
                 @click="showMobileMenu = false"
               >
                 My Dashboard
               </NuxtLink>
               <NuxtLink
                 to="/dashboard"
-                class="block px-3 py-2 rounded-md text-base font-medium"
-                :class="{'text-gray-800 hover:text-teal-600 hover:bg-gray-100': scrolled, 'text-white hover:text-white hover:bg-white hover:bg-opacity-20': !scrolled}"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100"
                 @click="showMobileMenu = false"
               >
                 Account Settings
               </NuxtLink>
               <button
                 @click="logout(); showMobileMenu = false"
-                class="w-full text-left block px-3 py-2 rounded-md text-base font-medium"
-                :class="{'text-gray-800 hover:text-teal-600 hover:bg-gray-100': scrolled, 'text-white hover:text-white hover:bg-white hover:bg-opacity-20': !scrolled}"
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:bg-gray-100"
               >
                 Logout
               </button>
@@ -275,6 +273,8 @@ const logout = async () => {
 }
 
 const toggleDropdown = () => {
+console.log(showDropdown.value);
+
   showDropdown.value = !showDropdown.value
 }
 

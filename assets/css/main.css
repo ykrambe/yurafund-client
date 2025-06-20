@@ -1,10 +1,8 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-
-/* Custom styles from previous project */
-body {
-  font-family: Poppins, sans-serif;
+@theme {
+  --font-sans: 'Public Sans', sans-serif;
 }
 
 .auth-form {
