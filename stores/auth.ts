@@ -1,27 +1,32 @@
 import { defineStore } from 'pinia'
+import { useApi } from '~/composables/useApi'
 
 interface User {
   id: number
   name: string
   email: string
+  image_url?: string
+  token: string
 }
 
 interface AuthState {
   user: User | null
-  token: string | null
   isAuthenticated: boolean
 }
 
-export const useAuthStore = defineStore('auth', {
+interface ILogin {
+  email: string
+  password: string
+}
+
+export const useAuthStore = defineStore('useAuthStore', {
   state: (): AuthState => ({
     user: null,
-    token: null,
     isAuthenticated: false
   }),
 
   getters: {
     getUser: (state) => state.user,
-    getToken: (state) => state.token,
     isLoggedIn: (state) => state.isAuthenticated
   },
 
@@ -30,37 +35,29 @@ export const useAuthStore = defineStore('auth', {
       this.user = user
       this.isAuthenticated = true
     },
-
-    setToken(token: string) {
-      this.token = token
-    },
-
     logout() {
       this.user = null
-      this.token = null
       this.isAuthenticated = false
+      localStorage.removeItem('YurafundToken')
+      localStorage.removeItem('YurafundUser')
     },
+  async login(credentials: ILogin) {
+    const { api } = useApi()
+    try {
+      const response: any = await api('/sessions', {
+        method: 'POST',
+        body: credentials
+      })
+      
+      // Update state setelah login berhasil
+      this.setUser(response.data)
 
-    async login(credentials: { email: string; password: string }) {
-      try {
-        const { $fetch } = useNuxtApp()
-        const config = useRuntimeConfig()
-        
-        const response = await $fetch('/api/auth/login', {
-          method: 'POST',
-          baseURL: config.public.apiBase,
-          body: credentials
-        })
-        
-        // Handle successful login response
-        // this.setToken(response.token)
-        // this.setUser(response.user)
-        
-        return response
-      } catch (error) {
-        console.error('Login error:', error)
-        throw error
-      }
+      localStorage.setItem('YurafundUser', JSON.stringify(response.data))
+      
+      return response
+    } catch (error: any) {
+      return error.data
     }
+}
   }
 })

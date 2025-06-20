@@ -1,6 +1,5 @@
 export const useApi = () => {
   const config = useRuntimeConfig()
-  console.log("🚀 ~ useApi ~ config:", config.public.apiBase)
   const api = $fetch.create({
     baseURL: config.public.apiBase + '/api/v1',
     headers: {
@@ -20,17 +19,17 @@ export const useApi = () => {
       console.error('Request error:', error)
     },
     onResponse({ request, response, options }) {
-      // Handle successful responses
+      return response._data
     },
     onResponseError({ request, response, options }) {
-      console.error('Response error:', response.status, response.statusText)
-      
       // Handle 401 unauthorized
       if (response.status === 401) {
         const authStore = useAuthStore()
         authStore.logout()
         navigateTo('/login')
       }
+
+      return response._data
     }
   })
   

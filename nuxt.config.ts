@@ -31,7 +31,8 @@ export default defineNuxtConfig({
   // Tailwind CSS configuration
   tailwindcss: {
     cssPath: '~/assets/css/main.css',
-    configPath: 'tailwind.config'
+    config: {},
+    viewer: { endpoint: '/_tailwind', exportViewer: true }
   },
   
   // ESLint configuration
@@ -49,6 +50,20 @@ export default defineNuxtConfig({
   // UI configuration
   ui: {
     global: true,
-    icons: ['heroicons']
-  }
+    icons: ['heroicons'],
+    colorMode: false,
+    fonts: false
+  },
+  
+  // Fonts configuration
+  fonts: {
+    families: [
+      {
+        name: 'Poppins',
+        provider: 'google',
+        weights: [300, 400, 500, 600, 700],
+        subsets: ['latin']
+      }
+    ]
+  },
 })
