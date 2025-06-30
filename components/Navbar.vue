@@ -1,3 +1,73 @@
+<script setup>
+import { useAuthStore } from '~/stores/auth'
+
+// Reactive data
+const showMobileMenu = ref(false)
+const showDropdown = ref(false)
+const scrolled = ref(false)
+
+// Store and config
+const authStore = useAuthStore()
+const config = useRuntimeConfig()
+
+// Methods
+const toggleMobileMenu = () => {
+  showMobileMenu.value = !showMobileMenu.value
+  // Close dropdown when opening mobile menu
+  if (showMobileMenu.value) {
+    showDropdown.value = false
+  }
+}
+
+const logout = async () => {
+  await authStore.logout()
+  closeDropdown()
+  await navigateTo('/')
+}
+
+const toggleDropdown = () => {
+console.log(showDropdown.value);
+
+  showDropdown.value = !showDropdown.value
+}
+
+const closeDropdown = () => {
+  showDropdown.value = false
+}
+
+const handleScroll = () => {
+  scrolled.value = window.scrollY > 10
+}
+
+// Lifecycle hooks
+onMounted(() => {
+  authStore.setSession()
+  window.addEventListener('scroll', handleScroll)
+  // Initial check
+  handleScroll()
+  
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
+// Click outside directive
+const vClickOutside = {
+  beforeMount(el, binding) {
+    el.clickOutsideEvent = (event) => {
+      if (!(el === event.target || el.contains(event.target))) {
+        binding.value(event)
+      }
+    }
+    document.addEventListener('click', el.clickOutsideEvent)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.clickOutsideEvent)
+  }
+}
+</script>
+
 <template>
   <header 
     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-secondary" 
@@ -244,71 +314,3 @@
     </Transition>
   </header>
 </template>
-
-<script setup>
-import { useAuthStore } from '~/stores/auth'
-
-// Reactive data
-const showMobileMenu = ref(false)
-const showDropdown = ref(false)
-const scrolled = ref(false)
-
-// Store and config
-const authStore = useAuthStore()
-const config = useRuntimeConfig()
-
-// Methods
-const toggleMobileMenu = () => {
-  showMobileMenu.value = !showMobileMenu.value
-  // Close dropdown when opening mobile menu
-  if (showMobileMenu.value) {
-    showDropdown.value = false
-  }
-}
-
-const logout = async () => {
-  await authStore.logout()
-  closeDropdown()
-  await navigateTo('/')
-}
-
-const toggleDropdown = () => {
-console.log(showDropdown.value);
-
-  showDropdown.value = !showDropdown.value
-}
-
-const closeDropdown = () => {
-  showDropdown.value = false
-}
-
-const handleScroll = () => {
-  scrolled.value = window.scrollY > 10
-}
-
-// Lifecycle hooks
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-  // Initial check
-  handleScroll()
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
-
-// Click outside directive
-const vClickOutside = {
-  beforeMount(el, binding) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
-        binding.value(event)
-      }
-    }
-    document.addEventListener('click', el.clickOutsideEvent)
-  },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
-  }
-}
-</script>

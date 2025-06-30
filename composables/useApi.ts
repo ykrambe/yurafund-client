@@ -2,20 +2,21 @@ export const useApi = () => {
   const config = useRuntimeConfig()
   const api = $fetch.create({
     baseURL: config.public.apiBase + '/api/v1',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     onRequest({ request, options }) {
       // Add auth token if available
-      const authStore = useAuthStore()
-      if (authStore.token) {
+      const user = JSON.parse(localStorage.getItem('YurafundUser') || '{}')
+      
+      console.log("🚀 ~ onRequest ~ user:", user)
+      if (user.token) {
         options.headers = {
-          ...options.headers,
-          Authorization: `Bearer ${authStore.token}`
+          Authorization: `Bearer ${user.token}`
         }
       }
     },
     onRequestError({ request, options, error }) {
+      console.log("🚀 ~ onRequestError ~ error:", error)
+      console.log("🚀 ~ onRequestError ~ options:", options)
+      console.log("🚀 ~ onRequestError ~ request:", request)
       console.error('Request error:', error)
     },
     onResponse({ request, response, options }) {

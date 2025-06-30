@@ -1,3 +1,70 @@
+<script setup>
+import { useAuthStore } from '~/stores/auth'
+
+// Define page meta
+definePageMeta({
+  layout: 'auth'
+})
+
+// Reactive data
+const avatarUrl = ref('/avatar.jpg')
+const selectedFile = ref(null)
+const isUploading = ref(false)
+const uploadProgress = ref(0)
+const fileInput = ref(null)
+
+const authStore = useAuthStore()
+const { uploadAvatar } = useAuth()
+
+// File change handler
+const onFileChange = (event) => {
+  const file = event.target.files[0]
+  console.log("🚀 ~ onFileChange ~ file:", file)
+  if (file) {
+    selectedFile.value = file
+    avatarUrl.value = URL.createObjectURL(file)
+  }
+}
+
+// Upload handler
+const handleUpload = async () => {
+  if (!selectedFile.value) return
+  isUploading.value = true
+  uploadProgress.value = 0
+  try {
+    const formData = new FormData()
+    formData.append('avatar', selectedFile.value)
+    // Jangan set Content-Type secara manual!
+    const { api } = useApi()
+    const response = await api('/avatars', {
+      method: 'POST',
+      body: formData
+      // headers: { 'Content-Type': 'multipart/form-data' } // HAPUS BARIS INI
+    })
+    uploadProgress.value = 100
+    await navigateTo('/register-success')
+  } catch (error) {
+    console.error('Upload failed:', error)
+  } finally {
+    isUploading.value = false
+    uploadProgress.value = 0
+  }
+}
+
+// Skip handler
+const handleSkip = async () => {
+  await navigateTo('/register-success')
+}
+
+// SEO
+useHead({
+  title: 'YuraFund - Upload Avatar',
+  meta: [
+    { name: 'description', content: 'Upload your profile picture to complete registration' }
+  ]
+})
+</script>
+
 <template>
   <div class="min-h-screen flex justify-center items-center bg-secondary px-4 py-8">
     <div class="w-full max-w-md sm:max-w-lg">
@@ -79,94 +146,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { useAuthStore } from '~/stores/auth'
-
-// Define page meta
-definePageMeta({
-  layout: 'auth'
-})
-
-// Reactive data
-const avatarUrl = ref('/avatar.jpg')
-const selectedFile = ref(null)
-const isUploading = ref(false)
-const uploadProgress = ref(0)
-const fileInput = ref(null)
-
-const authStore = useAuthStore()
-const { api } = useApi()
-
-// File change handler
-const onFileChange = (event) => {
-  const file = event.target.files?.[0]
-  if (file) {
-    selectedFile.value = file
-    avatarUrl.value = URL.createObjectURL(file)
-  }
-}
-
-// Upload handler
-const handleUpload = async () => {
-  if (!selectedFile.value) return
-  
-  isUploading.value = true
-  uploadProgress.value = 0
-  
-  try {
-    const formData = new FormData()
-    formData.append('avatar', selectedFile.value)
-    
-    // Simulate upload progress
-    const progressInterval = setInterval(() => {
-      if (uploadProgress.value < 90) {
-        uploadProgress.value += 10
-      }
-    }, 100)
-    
-    const { api } = useApi()
-    const response = await api('/avatars', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    
-    clearInterval(progressInterval)
-    uploadProgress.value = 100
-    
-    // Update user avatar in store if needed
-    if (response.data?.avatar_url) {
-      authStore.updateUserAvatar(response.data.avatar_url)
-    }
-    
-    // Navigate to success page
-    await navigateTo('/register-success')
-  } catch (error) {
-    console.error('Upload failed:', error)
-    // You might want to show an error toast here
-  } finally {
-    isUploading.value = false
-    uploadProgress.value = 0
-  }
-}
-
-// Skip handler
-const handleSkip = async () => {
-  await navigateTo('/register-success')
-}
-
-// SEO
-useHead({
-  title: 'YuraFund - Upload Avatar',
-  meta: [
-    { name: 'description', content: 'Upload your profile picture to complete registration' }
-  ]
-})
-</script>
-
-<style scoped>
-/* Custom styles if needed */
-</style>

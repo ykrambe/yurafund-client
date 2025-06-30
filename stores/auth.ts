@@ -38,26 +38,66 @@ export const useAuthStore = defineStore('useAuthStore', {
     logout() {
       this.user = null
       this.isAuthenticated = false
-      localStorage.removeItem('YurafundToken')
       localStorage.removeItem('YurafundUser')
     },
-  async login(credentials: ILogin) {
-    const { api } = useApi()
-    try {
-      const response: any = await api('/sessions', {
-        method: 'POST',
-        body: credentials
-      })
-      
-      // Update state setelah login berhasil
-      this.setUser(response.data)
+    async login(credentials: ILogin) {
+      const { api } = useApi()
+      try {
+        const response: any = await api('/sessions', {
+          method: 'POST',
+          body: credentials
+        })
+        
+        // Update state setelah login berhasil
+        this.setUser(response.data)
 
-      localStorage.setItem('YurafundUser', JSON.stringify(response.data))
-      
-      return response
-    } catch (error: any) {
-      return error.data
+        localStorage.setItem('YurafundUser', JSON.stringify(response.data))
+        
+        return response
+      } catch (error: any) {
+        return error.data
+      }
+    },
+    async register(credentials: any) {
+      const { api } = useApi()
+      try {
+        const response: any = await api('/users', {
+          method: 'POST',
+          body: credentials
+        })
+
+        this.setUser(response.data)
+        localStorage.setItem('YurafundUser', JSON.stringify(response.data))
+        
+        return response
+      } catch (error: any) {
+        return error.data
+      }
+    },
+    async uploadAvatar(credentials: any) {
+      const { api } = useApi()
+      try {
+        const response: any = await api('/avatars', {
+          method: 'POST',
+          body: {
+            files: credentials
+          }
+        })
+        
+        return response
+      } catch (error: any) {
+        return error.data
+      }
+    },
+    setSession(){
+      if (localStorage.getItem('YurafundUser')) {
+        this.user = JSON.parse(localStorage.getItem('YurafundUser') || '{}')
+        this.isAuthenticated = true
+      }
+      else{
+        this.user = null
+        this.isAuthenticated = false
+      }
     }
-}
   }
 })

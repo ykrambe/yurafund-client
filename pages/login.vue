@@ -159,8 +159,6 @@ useHead({
                 </template>
               </UInput>
             </UFormField>
-            
-
           </div>
           
           <div class="pt-4">
