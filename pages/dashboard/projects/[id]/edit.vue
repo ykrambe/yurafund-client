@@ -1,15 +1,21 @@
 <script setup>
 import { z } from 'zod'
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, reactive, watch, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useApi } from '~/composables/useApi'
+import { useCampaignStore } from '~/stores/campaign'
+import { useToast } from '#imports'
 
-// Define page meta
 definePageMeta({
   layout: 'home'
 })
 
-// Zod validation schema
+const campaignStore = useCampaignStore()
+const toast = useToast()
+const route = useRoute()
+const router = useRouter()
+const api = useApi()
+
 const campaignSchema = z.object({
   name: z.string().min(1, 'Campaign name is required'),
   short_description: z.string().min(1, 'Short description is required'),
@@ -28,9 +34,20 @@ const campaignForm = reactive({
 
 const errors = ref({})
 const pending = ref(false)
-const api = useApi()
-const router = useRouter()
-const { createCampaign } = useCampaign()
+
+onMounted(async () => {
+  pending.value = true
+  await campaignStore.getUserCampaignById(route.params.id)
+  const data = campaignStore.getCampaign
+  if (data) {
+    campaignForm.name = data.name || ''
+    campaignForm.short_description = data.short_description || ''
+    campaignForm.description = data.description || ''
+    campaignForm.goal_amount = data.goal_amount || ''
+    campaignForm.perks = Array.isArray(data.perks) ? data.perks.join(', ') : (data.perks || '')
+  }
+  pending.value = false
+})
 
 const validateForm = () => {
   try {
@@ -63,21 +80,23 @@ const save = async () => {
   if (!validateForm()) return
   pending.value = true
   try {
-    await createCampaign({
+    await campaignStore.updateCampaign(route.params.id, {
       ...campaignForm,
       goal_amount: Number(campaignForm.goal_amount)
     })
+    toast.add({ title: 'Campaign updated successfully!', color: 'success' })
+    router.push('/dashboard')
   } catch (err) {
-    console.error('Create Campaign error:', err)
+    toast.add({ title: 'Failed to update campaign', color: 'error' })
   } finally {
     pending.value = false
   }
 }
 
 useHead({
-  title: 'Create Campaign - YuraFund',
+  title: 'Edit Campaign - YuraFund',
   meta: [
-    { name: 'description', content: 'Create a new fundraising campaign on YuraFund' }
+    { name: 'description', content: 'Edit your campaign details' }
   ]
 })
 </script>
@@ -86,7 +105,7 @@ useHead({
   <div class="project-page pt-10">
     <section class="container mx-auto pt-8 px-4">
       <div class="flex flex-col gap-6">
-        <h3 class="text-2xl text-gray-900 mb-4">Create New Project</h3>
+        <h3 class="text-2xl text-gray-900 mb-4">Edit Campaign {{ campaignForm.name }}</h3>
         <UForm :state="campaignForm" @submit="save" class="w-full space-y-6">
           <UFormField label="Campaign Name" name="name" required :error="errors.name">
             <UInput v-model="campaignForm.name" type="text" placeholder="Campaign Name" size="xl" color="orange" class="w-full hover:scale-[1.02]" :class="{ 'border-red-500': errors.name }" @blur="validateField('name')" @input="validateField('name')" />
@@ -123,3 +142,4 @@ useHead({
     <section class="call-to-action bg-orange-progress pt-64 pb-10"></section>
   </div>
 </template>
+

@@ -23,7 +23,7 @@ const getProgressPercentage = (campaign) => {
 }
 
 const getCampaignImageUrl = (imageUrl) => {
-  if (!imageUrl) return '/project-thumbnail-1.jpg'
+  if (!imageUrl) return '/no-image-project.jpg'
   if (imageUrl.startsWith('http')) return imageUrl
   const { $config } = useNuxtApp()
   const baseURL = $config.public.apiBase || 'http://localhost:8080'
