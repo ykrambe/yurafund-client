@@ -44,14 +44,14 @@ useHead({
               </NuxtLink>
             </li>
             <li class="mr-6">
-              <a class="text-gray-800 font-bold" href="#">
+              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/transactions">
                 Your Transactions
-              </a>
+              </NuxtLink>
             </li>
             <li class="mr-6">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/fund-project">
+              <a class="text-gray-800 font-bold" href="#">
                 Fund a Project
-              </NuxtLink>
+              </a>
             </li>
           </ul>
         </div>

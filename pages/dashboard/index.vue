@@ -3,7 +3,7 @@ import { useCampaignStore } from '~/stores/campaign'
 import { formatCurrency } from '~/helper/utils'
 
 definePageMeta({
-  layout: 'home'
+  layout: 'dashboard'
 })
 
 const campaignStore = useCampaignStore()
@@ -48,19 +48,29 @@ useHead({
 
 <template>
   <div class="project-page pt-10">
-    <section class="container mx-auto pt-8 px-4">
-      <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
-        <div class="w-full lg:w-3/4">
-          <h2 class="text-3xl lg:text-4xl text-gray-900 mb-2 font-medium">Dashboard</h2>
-          <ul class="flex mt-2 space-x-6">
-            <li>
-              <a class="text-gray-800 font-bold hover:text-orange-500 transition-colors" href="#">Your Projects</a>
+    <section class="container mx-auto pt-8">
+      <div class="flex justify-between items-center mb-6">
+        <div class="w-3/4 mr-6">
+          <h2 class="text-4xl text-gray-900 mb-2 font-medium">Dashboard</h2>
+          <ul class="flex mt-2">
+            <li class="mr-6">
+              <a class="text-gray-800 font-bold" href="#">
+              Your Projects
+              </a>
             </li>
-            <li>
-              <NuxtLink class="text-gray-500 hover:text-gray-800 transition-colors" to="/dashboard/transactions">Your Transactions</NuxtLink>
+            <li class="mr-6">
+              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/transactions">
+              Your Transactions
+              </NuxtLink>
+            </li>
+            <li class="mr-6">
+              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/fund-project">
+              Fund a Project
+              </NuxtLink>
             </li>
           </ul>
         </div>
+        <hr />
         <div class="w-full lg:w-1/4 lg:text-right">
           <UButton to="/dashboard/projects/create" color="orange" variant="solid" size="lg" class="w-full lg:w-auto">
             <Icon name="i-heroicons-plus" class="mr-2" />
@@ -134,7 +144,6 @@ useHead({
         </div>
       </div>
     </section>
-    <div class="cta-clip -mt-20 bg-black"></div>
-    <section class="call-to-action bg-orange-progress pt-64 pb-10"></section>
+    
   </div>
 </template>

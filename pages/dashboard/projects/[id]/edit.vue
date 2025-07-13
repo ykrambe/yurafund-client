@@ -7,7 +7,7 @@ import { useCampaignStore } from '~/stores/campaign'
 import { useToast } from '#imports'
 
 definePageMeta({
-  layout: 'home'
+  layout: 'dashboard'
 })
 
 const campaignStore = useCampaignStore()
@@ -32,10 +32,16 @@ const campaignForm = reactive({
   perks: ''
 })
 
+const images = ref([])
+
 const errors = ref({})
 const pending = ref(false)
 
 onMounted(async () => {
+  await fetchCampaign()
+})
+
+const fetchCampaign = async() => {
   pending.value = true
   await campaignStore.getUserCampaignById(route.params.id)
   const data = campaignStore.getCampaign
@@ -45,9 +51,10 @@ onMounted(async () => {
     campaignForm.description = data.description || ''
     campaignForm.goal_amount = data.goal_amount || ''
     campaignForm.perks = Array.isArray(data.perks) ? data.perks.join(', ') : (data.perks || '')
+    images.value = data.images || []
   }
   pending.value = false
-})
+}
 
 const validateForm = () => {
   try {
@@ -99,6 +106,51 @@ useHead({
     { name: 'description', content: 'Edit your campaign details' }
   ]
 })
+
+const selectedFiles = ref(null)
+const uploading = ref(false)
+
+function handleFileChange(event) {
+  const file = event.target.files[0]
+  if (file) {
+    selectedFiles.value = file
+    // avatarUrl.value = URL.createObjectURL(file)
+  }
+}
+
+const handleImageError = (event) => {
+  event.target.src = '/project-thumbnail-1.jpg'
+}
+
+async function uploadImages() {
+  if (!selectedFiles.value) return
+  try {
+    const formData = new FormData()
+    formData.append('file', selectedFiles.value)
+    formData.append('campaign_id', route.params.id)
+    formData.append('is_primary', true)
+
+    const { api } = useApi()
+    const response = await api('/campaign-images', {
+      method: 'POST',
+      body: formData
+    })
+    toast.add({ title: 'Images uploaded successfully!', color: 'success' })
+    await fetchCampaign()
+    selectedFiles.value = null
+    formData.delete('file')
+  } catch (error) {
+    console.error('Upload failed:', error)
+  }
+}
+
+const getCampaignImageUrl = (imageUrl) => {
+  if (!imageUrl) return '/no-image-project.jpg'
+  if (imageUrl.startsWith('http')) return imageUrl
+  const { $config } = useNuxtApp()
+  const baseURL = $config.public.apiBase || 'http://localhost:8080'
+  return `${baseURL}/${imageUrl}`
+}
 </script>
 
 <template>
@@ -106,6 +158,49 @@ useHead({
     <section class="container mx-auto pt-8 px-4">
       <div class="flex flex-col gap-6">
         <h3 class="text-2xl text-gray-900 mb-4">Edit Campaign {{ campaignForm.name }}</h3>
+        <!-- tamahkan komponen upload gambar -->
+        <div class="flex justify-between items-center mb-6">
+          <div class="w-2/4 mr-6">
+            <h3 class="text-xl text-gray-900 mb-2 mt-2">Gallery</h3>
+          </div>
+          <div class="w-2/4 text-right">
+            <input
+              ref="fileInput"
+              type="file"
+              @change="handleFileChange"
+              accept="image/*"
+              class="border p-1 rounded overflow-hidden"
+            />
+            <button
+              @click="uploadImages"
+              :disabled="uploading"
+              class="bg-green-button hover:bg-green-button text-white font-bold px-4 py-2 rounded inline-flex items-center ml-2"
+            >
+            <UButton 
+            :loading="uploading" 
+            type="submit" 
+            color="orange" 
+            size="lg" 
+            :disabled="uploading"
+            class="transition-all duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span v-if="uploading">Uploading...</span>
+              <span v-else>Upload</span>
+            </UButton>
+            </button>
+          </div>
+        </div>
+        <div class="flex -mx-2">
+            <div
+              v-for="image in images"
+              :key="image.image_url"
+              class="relative w-1/4 bg-white m-2 p-2 border border-gray-400 rounded-20"
+            >
+              <figure class="item-thumbnail cursor-pointer">
+                <img :src="getCampaignImageUrl(image.image_url)" :alt="image.image_url" class="w-full h-full object-cover" @error="handleImageError" />
+              </figure>
+            </div>
+          </div>
         <UForm :state="campaignForm" @submit="save" class="w-full space-y-6">
           <UFormField label="Campaign Name" name="name" required :error="errors.name">
             <UInput v-model="campaignForm.name" type="text" placeholder="Campaign Name" size="xl" color="orange" class="w-full hover:scale-[1.02]" :class="{ 'border-red-500': errors.name }" @blur="validateField('name')" @input="validateField('name')" />
@@ -130,7 +225,7 @@ useHead({
             color="orange" 
             size="lg" 
             :disabled="pending || Object.keys(errors).length > 0 || !campaignForm.name || !campaignForm.short_description || !campaignForm.description || !campaignForm.goal_amount"
-            class="transition-all duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed"
+            class="transition-all text-white duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed"
             >
             Save
             </UButton>
@@ -138,8 +233,7 @@ useHead({
         </UForm>
       </div>
     </section>
-    <div class="cta-clip -mt-20 bg-black"></div>
-    <section class="call-to-action bg-orange-progress pt-64 pb-10"></section>
+    
   </div>
 </template>
 

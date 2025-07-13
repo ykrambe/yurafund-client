@@ -7,7 +7,7 @@ import { useCampaignStore } from '~/stores/campaign'
 import { useToast } from '#imports'
 
 definePageMeta({
-  layout: 'home'
+  layout: 'dashboard'
 })
 
 const campaignStore = useCampaignStore()
@@ -108,8 +108,7 @@ useHead({
         </UForm>
       </div>
     </section>
-    <div class="cta-clip -mt-20 bg-black"></div>
-    <section class="call-to-action bg-orange-progress pt-64 pb-10"></section>
+    
   </div>
 </template>
 

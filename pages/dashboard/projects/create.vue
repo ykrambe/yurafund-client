@@ -6,7 +6,7 @@ import { useApi } from '~/composables/useApi'
 
 // Define page meta
 definePageMeta({
-  layout: 'home'
+  layout: 'dashboard'
 })
 
 // Zod validation schema
@@ -86,7 +86,14 @@ useHead({
   <div class="project-page pt-10">
     <section class="container mx-auto pt-8 px-4">
       <div class="flex flex-col gap-6">
-        <h3 class="text-2xl text-gray-900 mb-4">Create New Project</h3>
+        <h3 class="text-2xl text-gray-900">Create New Project</h3>
+        <ul class="flex">
+            <li class="">
+              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard">
+              Back to Dashboard
+              </NuxtLink>
+            </li>
+          </ul>
         <UForm :state="campaignForm" @submit="save" class="w-full space-y-6">
           <UFormField label="Campaign Name" name="name" required :error="errors.name">
             <UInput v-model="campaignForm.name" type="text" placeholder="Campaign Name" size="xl" color="orange" class="w-full hover:scale-[1.02]" :class="{ 'border-red-500': errors.name }" @blur="validateField('name')" @input="validateField('name')" />
@@ -119,7 +126,6 @@ useHead({
         </UForm>
       </div>
     </section>
-    <div class="cta-clip -mt-20 bg-black"></div>
-    <section class="call-to-action bg-orange-progress pt-64 pb-10"></section>
+    
   </div>
 </template>

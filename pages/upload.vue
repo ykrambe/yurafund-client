@@ -19,7 +19,6 @@ const { uploadAvatar } = useAuth()
 // File change handler
 const onFileChange = (event) => {
   const file = event.target.files[0]
-  console.log("🚀 ~ onFileChange ~ file:", file)
   if (file) {
     selectedFile.value = file
     avatarUrl.value = URL.createObjectURL(file)
