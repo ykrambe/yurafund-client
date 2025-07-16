@@ -54,25 +54,41 @@ useHead({
           <h2 class="text-4xl text-gray-900 mb-2 font-medium">Dashboard</h2>
           <ul class="flex mt-2">
             <li class="mr-6">
-              <a class="text-gray-800 font-bold" href="#">
-              Your Projects
-              </a>
+              <UBadge
+              class="text-bold"
+              >
+                <NuxtLink  to="#">
+                Your Projects
+                </NuxtLink>
+              </UBadge>
             </li>
             <li class="mr-6">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/transactions">
-              Your Transactions
-              </NuxtLink>
+              <UBadge
+              variant="subtle"
+              color="warning"
+              class="text-black"
+              >
+                <NuxtLink  to="/dashboard/transactions">
+                Your Transactions
+                </NuxtLink>
+              </UBadge>
             </li>
             <li class="mr-6">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/fund-project">
-              Fund a Project
-              </NuxtLink>
+              <UBadge
+              variant="subtle"
+              color="warning"
+              class="text-black"
+              >
+                <NuxtLink to="/dashboard/fund-project">
+                Fund a Project
+                </NuxtLink>
+              </UBadge>
             </li>
           </ul>
         </div>
         <hr />
         <div class="w-full lg:w-1/4 lg:text-right">
-          <UButton to="/dashboard/projects/create" color="orange" variant="solid" size="lg" class="w-full lg:w-auto">
+          <UButton to="/dashboard/projects/create" color="primary" variant="solid" size="lg" class="w-full lg:w-auto">
             <Icon name="i-heroicons-plus" class="mr-2" />
             Create Campaign
           </UButton>
@@ -105,7 +121,7 @@ useHead({
             <div class="flex-1 p-6 lg:p-8">
               <div class="flex flex-col justify-between h-full">
                 <div class="mb-4">
-                  <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-orange-600 transition-colors">{{ campaign.name }}</h3>
+                  <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-orange-500 transition-colors">{{ campaign.name }}</h3>
                   <div class="flex flex-wrap items-center gap-4 mb-3">
                     <div class="flex items-center text-sm text-gray-600">
                       <UIcon name="i-heroicons-currency-dollar" class="mr-1" />
@@ -126,17 +142,14 @@ useHead({
                   <p class="text-gray-700 text-base line-clamp-2">{{ campaign.short_description }}</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                  <UButton :to="`/dashboard/projects/${campaign.id}`" color="orange" variant="solid" size="sm">
+                  <UButton :to="`/dashboard/projects/${campaign.id}`" color="primary" variant="solid" class="text-black">
                     <UIcon name="i-heroicons-eye" class="mr-1" />
-                    View Details
+                    View
                   </UButton>
-                  <UButton :to="`/dashboard/projects/${campaign.id}/edit`" color="gray" variant="outline" size="sm">
+                  <UButton :to="`/dashboard/projects/${campaign.id}/edit`" color="primary" variant="solid" class="text-black">
                     <UIcon name="i-heroicons-pencil" class="mr-1" />
                     Edit
                   </UButton>
-                  <UBadge :color="campaign.current_amount >= campaign.goal_amount ? 'green' : 'orange'" variant="subtle" size="sm">
-                    {{ campaign.current_amount >= campaign.goal_amount ? 'Funded' : 'Active' }}
-                  </UBadge>
                 </div>
               </div>
             </div>
@@ -144,6 +157,5 @@ useHead({
         </div>
       </div>
     </section>
-    
   </div>
 </template>

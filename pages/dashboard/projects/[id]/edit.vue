@@ -114,7 +114,7 @@ function handleFileChange(event) {
   const file = event.target.files[0]
   if (file) {
     selectedFiles.value = file
-    // avatarUrl.value = URL.createObjectURL(file)
+    // avatarUrl.value = URL.createObjectURL(file
   }
 }
 
@@ -123,7 +123,10 @@ const handleImageError = (event) => {
 }
 
 async function uploadImages() {
-  if (!selectedFiles.value) return
+  if (!selectedFiles.value) {
+    toast.add({ title: 'Please select an image', color: 'error' })
+    return
+  }
   try {
     const formData = new FormData()
     formData.append('file', selectedFiles.value)
@@ -157,7 +160,16 @@ const getCampaignImageUrl = (imageUrl) => {
   <div class="project-page pt-10">
     <section class="container mx-auto pt-8 px-4">
       <div class="flex flex-col gap-6">
-        <h3 class="text-2xl text-gray-900 mb-4">Edit Campaign {{ campaignForm.name }}</h3>
+        <h3 class="text-2xl text-gray-900">Edit Campaign {{ campaignForm.name }}</h3>
+        <ul class="flex">
+          <li>
+            <UBadge icon="i-lucide-arrow-left"  color="primary" variant="solid" class="text-black">
+              <NuxtLink to="/dashboard">
+                back to dashboard
+              </NuxtLink>
+            </UBadge>
+          </li>
+        </ul>
         <!-- tamahkan komponen upload gambar -->
         <div class="flex justify-between items-center mb-6">
           <div class="w-2/4 mr-6">
@@ -171,23 +183,18 @@ const getCampaignImageUrl = (imageUrl) => {
               accept="image/*"
               class="border p-1 rounded overflow-hidden"
             />
-            <button
+            <UButton
               @click="uploadImages"
+              :loading="uploading" 
+              type="submit" 
+              color="orange" 
+              size="lg" 
               :disabled="uploading"
-              class="bg-green-button hover:bg-green-button text-white font-bold px-4 py-2 rounded inline-flex items-center ml-2"
-            >
-            <UButton 
-            :loading="uploading" 
-            type="submit" 
-            color="orange" 
-            size="lg" 
-            :disabled="uploading"
-            class="transition-all duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed"
+              class=" mx-2 transition-all duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span v-if="uploading">Uploading...</span>
               <span v-else>Upload</span>
             </UButton>
-            </button>
           </div>
         </div>
         <div class="flex -mx-2">

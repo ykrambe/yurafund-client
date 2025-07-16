@@ -41,6 +41,26 @@ export const useTransactionStore = defineStore('useTransactionStore', {
         this.pending = false
         return error.data
       }
+    },
+    async fundProject(credentials: any) {
+      const { api } = useApi()
+      this.pending = true
+      this.error = null
+      try {
+        const response: any = await api(`/transactions`, {
+          method: 'POST',
+          body: {
+            campaign_id: credentials.campaign_id,
+            amount: credentials.amount
+          }
+        })
+        this.pending = false
+        return response
+      } catch (error: any) {
+        this.error = error.data || error
+        this.pending = false
+        return error.data
+      }
     }
   }
 })

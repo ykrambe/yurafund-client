@@ -1,6 +1,7 @@
 <script setup>
 import { formatCurrency } from '~/helper/utils'
 import { useTransactionStore } from '~/stores/transactions'
+import { useToast } from '#imports'
 
 definePageMeta({
   layout: 'dashboard'
@@ -18,7 +19,12 @@ const pending = computed(() => transactionStore.isPending)
 const error = computed(() => transactionStore.getError)
 
 const refresh = async () => {
-  console.log('refresh');
+  try {
+    await transactionStore.getUserTransaction()
+    toast.add({title: 'Successfully refresh transactions', color: 'success'})
+  } catch (error) {
+    toast.add({title: 'Failed to refresh transactions', color: 'error'})
+  }
   
 }
 
@@ -29,6 +35,39 @@ useHead({
   ]
 })
 
+const columns = ref([
+  { accessorKey: 'campaign', header: 'Image', sortable: false },
+  { accessorKey: 'campaign.name', header: 'Campaign Name', sortable: true },
+  { accessorKey: 'amount', header: 'Amount', sortable: true },
+  { accessorKey: 'created_at', header: 'Date', sortable: true },
+  { accessorKey: 'status', header: 'Status', sortable: true }
+])
+
+const getCampaignImageUrl = (imageUrl) => {
+  if (!imageUrl) return '/no-image-project.jpg'
+  if (imageUrl.startsWith('http')) return imageUrl
+  const { $config } = useNuxtApp()
+  const baseURL = $config.public.apiBase || 'http://localhost:8080'
+  return `${baseURL}/${imageUrl}`
+}
+
+const returnColor = (status) => {
+  if (status === 'pending') return 'warning'
+  if (status === 'paid') return 'success'
+  if (status === 'failed') return 'error'
+  return 'red'
+}
+
+const tableRows = computed(() => {
+  if (!transactions.value?.data) return []
+  return transactions.value.data.map(t => ({
+    image: t.campaign.image_url?.startsWith('http') ? t.campaign.image_url : (useRuntimeConfig().public.apiBase || 'http://localhost:8080') + '/' + t.campaign.image_url,
+    name: t.campaign.name,
+    amount: `Rp. ${formatCurrency(t.amount)}`,
+    created_at: t.created_at,
+    status: t.status
+  }))
+})
 </script>
 
 <template>
@@ -39,24 +78,29 @@ useHead({
           <h2 class="text-4xl text-gray-900 mb-2 font-medium">Dashboard</h2>
           <ul class="flex mt-2">
             <li class="mr-6">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard">
+              <UBadge variant="subtle" color="warning" class="text-black">
+                <NuxtLink to="/dashboard">
                 Your Projects
-              </NuxtLink>
+                </NuxtLink>
+              </UBadge>
             </li>
             <li class="mr-6">
-              <a class="text-gray-800 font-bold" href="#">
+              <UBadge class="text-bold">
+                <NuxtLink to="#">
                 Your Transactions
-              </a>
+                </NuxtLink>
+              </UBadge>
             </li>
             <li class="mr-6">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard/fund-project">
+              <UBadge variant="subtle" color="warning" class="text-black">
+                <NuxtLink to="/dashboard/fund-project">
                 Fund a Project
-              </NuxtLink>
+                </NuxtLink>
+              </UBadge>
             </li>
           </ul>
         </div>
       </div>
-      <hr />
       <div class="block mb-2">
         <div v-if="pending" class="text-center py-12">
           <UIcon name="i-heroicons-arrow-path" class="animate-spin text-orange-500 text-2xl" />
@@ -67,40 +111,28 @@ useHead({
           <p class="text-gray-600 mb-4">Failed to load transactions</p>
           <UButton @click="refresh" color="orange" variant="outline">Try Again</UButton>
         </div>
-        <div v-else-if="!transactions?.data?.length" class="text-center py-12">
-          <UIcon name="i-heroicons-folder-open" class="text-gray-400 text-6xl mb-4" />
-          <h3 class="text-xl font-medium text-gray-900 mb-2">No transactions yet</h3>
-          <p class="text-gray-600 mb-6">You have not made any transactions yet.</p>
-        </div>
         <div v-else>
-          <div
-            class="w-full lg:max-w-full lg:flex mb-4"
-            v-for="transaction in transactions.data"
-            :key="transaction.id"
-          >
-            <div
-              class="border h-48 lg:h-auto lg:w-64 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
-              :style="{
-                backgroundColor: '#bbb',
-                backgroundPosition: 'center',
-                backgroundImage: `url(${transaction.campaign.image_url?.startsWith('http') ? transaction.campaign.image_url : (useRuntimeConfig().public.apiBase || 'http://localhost:8080') + '/' + transaction.campaign.image_url})`
-              }"
-            ></div>
-            <div
-              class="w-full border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-8 flex flex-col justify-between leading-normal"
-            >
-              <div>
-                <div class="text-gray-900 font-bold text-xl mb-1">
-                  {{ transaction.campaign.name }}
-                </div>
-                <p class="text-sm text-gray-600 flex items-center mb-2">
-                  Rp. {{ formatCurrency(transaction.amount) }}
-                  &middot; {{ transaction.created_at }} &middot;
-                  {{ transaction.status }}
-                </p>
-              </div>
-            </div>
-          </div>
+          <UTable :columns="columns" :data="transactions" class="rounded-lg shadow-sm border border-gray-200">
+          <template #status-cell="{ row }">
+              <UBadge 
+              :label="row.original.status"
+              variant= 'subtle'
+              :color="returnColor(row.original.status)"
+              />
+          </template>
+          <template #created_at-cell="{ row }">
+              {{new Date(row.original.created_at).toLocaleString()}}
+
+          </template>
+          <template #amount-cell="{ row }">
+              Rp. {{formatCurrency(row.original.amount)}}
+
+
+          </template>
+          <template #campaign-cell="{ row }">
+            <img :src="getCampaignImageUrl(row.original.campaign.image_url)" alt="Campaign Image" class="w-12 h-12 object-cover rounded" />
+          </template>
+          </UTable>
         </div>
       </div>
     </section>

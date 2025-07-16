@@ -2,9 +2,12 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCampaignStore } from '~/stores/campaign'
+import { useTransactionStore } from '~/stores/transactions'
 import Navbar from '~/components/Navbar.vue'
 import CallToAction from '~/components/CallToAction.vue'
 import Footer from '~/components/Footer.vue'
+import { useToast } from '#imports'
+
 
 definePageMeta({
   layout: 'dashboard'
@@ -12,7 +15,9 @@ definePageMeta({
 
 
 const route = useRoute()
+const toast = useToast()
 const campaignStore = useCampaignStore()
+const transactionStore = useTransactionStore()
 
 const projectForm = reactive({
   name: '',
@@ -29,8 +34,26 @@ const projectForm = reactive({
   fund_amount: 0
 })
 
-const fund = () => {
-  // Implement funding logic here
+const totalFund = ref(0)
+
+const fund = async () => {
+  if (totalFund.value < 10000) {
+    toast.add('Minimum funding amount is Rp 10.000')
+    return
+  }
+  
+  try {
+    const payload = {
+      amount: totalFund.value,
+      campaign_id: Number.parseInt(route.params.id)
+    }
+    const response = await transactionStore.fundProject(payload)
+    if (response.data) {
+      window.location = response.data.payment_url
+    }
+  } catch (error) {
+    toast.add({title: 'Failed to fund project', color: 'error'})
+  }
 }
 
 const getCampaignImageUrl = (imageUrl) => {
@@ -65,6 +88,19 @@ onMounted(async () => {
 <template>
   <div class="project-page pt-10">
     <section class="container project-container mx-auto pt-8 px-4">
+      <div class="w-3/4 mr-6">
+        <h2 class="text-4xl text-gray-900 mb-2 font-medium">Fund {{ projectForm.name }}</h2>
+        <ul class="flex mt-2">
+          <li class="mr-6">
+            <UBadge icon="i-lucide-arrow-left"  color="primary" variant="solid" class="text-black">
+              <NuxtLink to="/dashboard">
+                back to dashboard
+              </NuxtLink>
+            </UBadge>
+          </li>
+        </ul>
+        </div>
+
       <div class="flex mt-3">
         <div class="w-3/4 mr-6">
           <div class="bg-white p-3 mb-3 border border-gray-400 rounded-20">
@@ -92,7 +128,7 @@ onMounted(async () => {
         <div class="w-1/4">
           <div
             class="bg-white w-full p-5 border border-gray-400 rounded-20 sticky"
-            style="top: 15px;"
+            style="top: 30px;"
           >
             <h3>Project Leader:</h3>
             <div class="flex mt-3">
@@ -118,6 +154,32 @@ onMounted(async () => {
                 {{ perk }}
               </li>
             </ul>
+            <div class="mt-8 flex flex-col gap-4">
+              <label for="fund-amount" class="block text-sm font-medium text-gray-700 mb-1">Enter donation amount</label>
+              <div class="relative">
+                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">Rp</span>
+                <input
+                  id="fund-amount"
+                  type="number"
+                  min="10000"
+                  step="1000"
+                  class="border border-gray-300 block w-full pl-14 pr-6 py-3 rounded-full text-gray-800 text-lg shadow-sm focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition duration-300 ease-in-out placeholder-gray-400"
+                  placeholder="e.g. 100000"
+                  v-model.number="totalFund"
+                  @keyup.enter="fund"
+                  aria-label="Donation amount in Rupiah"
+                />
+              </div>
+              <UButton
+                @click="fund"
+                color="orange"
+                size="lg"
+                class="w-full flex items-center justify-center transition-all text-white duration-200 hover:scale-[1.02] hover:shadow-lg bg-primary-process disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg py-3 rounded-full mt-2"
+                :disabled="!totalFund || totalFund < 10000"
+              >
+                Fund Now
+              </UButton>
+            </div>
           </div>
         </div>
       </div>
@@ -156,9 +218,6 @@ onMounted(async () => {
         <div class="w-1/4 hidden md:block"></div>
       </div>
     </section>
-    <div class="cta-clip -mt-20"></div>
-    <CallToAction />
-    <Footer />
   </div>
 </template>
 

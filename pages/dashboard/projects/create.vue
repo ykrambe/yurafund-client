@@ -89,9 +89,11 @@ useHead({
         <h3 class="text-2xl text-gray-900">Create New Project</h3>
         <ul class="flex">
             <li class="">
-              <NuxtLink class="text-gray-500 hover:text-gray-800" to="/dashboard">
-              Back to Dashboard
-              </NuxtLink>
+              <UBadge icon="i-lucide-arrow-left"  color="primary" variant="solid" class="text-black">
+                <NuxtLink to="/dashboard">
+                  back to dashboard
+                </NuxtLink>
+              </UBadge>
             </li>
           </ul>
         <UForm :state="campaignForm" @submit="save" class="w-full space-y-6">

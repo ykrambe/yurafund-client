@@ -116,5 +116,29 @@ export const useCampaignStore = defineStore('useCampaignStore', {
         return error.data
       }
     },
+    async getCampaignToFund() {
+      const { api } = useApi()
+      this.pending = true
+      this.error = null
+      try {
+        let user = null
+        if (localStorage.getItem('YurafundUser')) {
+          user = JSON.parse(localStorage.getItem('YurafundUser')|| 'null')
+        }
+        
+        const response: any = await api(`/campaigns`, {
+          method: 'GET'
+        })
+
+        this.campaigns = response.data
+        this.pending = false
+
+        return response
+      } catch (error: any) {
+        this.error = error.data || error
+        this.pending = false
+        return error.data
+      }
+    }
   }
 })
