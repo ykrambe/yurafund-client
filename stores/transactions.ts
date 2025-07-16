@@ -26,7 +26,7 @@ export const useTransactionStore = defineStore('useTransactionStore', {
       this.error = null
       try {
         let user = null
-        if (localStorage.getItem('YurafundUser')) {
+        if (process.client && localStorage.getItem('YurafundUser')) {
           user = JSON.parse(localStorage.getItem('YurafundUser')|| 'null')
         }
         
