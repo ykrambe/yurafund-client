@@ -4,8 +4,10 @@ export const useApi = () => {
     baseURL: config.public.apiBase + '/api/v1',
     onRequest({ request, options }) {
       // Add auth token if available
-      const user = JSON.parse(localStorage.getItem('YurafundUser') || '{}')
-      
+      let user = {}
+      if (process.client) {
+        user = JSON.parse(localStorage.getItem('YurafundUser') || '{}')
+      }
       console.log("🚀 ~ onRequest ~ user:", user)
       if (user.token) {
         options.headers = {

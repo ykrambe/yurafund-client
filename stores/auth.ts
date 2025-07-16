@@ -38,7 +38,9 @@ export const useAuthStore = defineStore('useAuthStore', {
     logout() {
       this.user = null
       this.isAuthenticated = false
-      localStorage.removeItem('YurafundUser')
+      if (process.client) {
+        localStorage.removeItem('YurafundUser')
+      }
     },
     async login(credentials: ILogin) {
       const { api } = useApi()
@@ -50,9 +52,9 @@ export const useAuthStore = defineStore('useAuthStore', {
         
         // Update state setelah login berhasil
         this.setUser(response.data)
-
-        localStorage.setItem('YurafundUser', JSON.stringify(response.data))
-        
+        if (process.client) {
+          localStorage.setItem('YurafundUser', JSON.stringify(response.data))
+        }
         return response
       } catch (error: any) {
         return error.data
@@ -67,8 +69,9 @@ export const useAuthStore = defineStore('useAuthStore', {
         })
 
         this.setUser(response.data)
-        localStorage.setItem('YurafundUser', JSON.stringify(response.data))
-        
+        if (process.client) {
+          localStorage.setItem('YurafundUser', JSON.stringify(response.data))
+        }
         return response
       } catch (error: any) {
         return error.data
@@ -90,7 +93,7 @@ export const useAuthStore = defineStore('useAuthStore', {
       }
     },
     setSession(){
-      if (localStorage.getItem('YurafundUser')) {
+      if (process.client && localStorage.getItem('YurafundUser')) {
         this.user = JSON.parse(localStorage.getItem('YurafundUser') || '{}')
         this.isAuthenticated = true
       }
